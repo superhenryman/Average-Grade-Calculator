@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Grade Calculator</title>
+    <!--Study math or make a python script for no reason??-->
+    <style>
+        body {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  animation: fadeIn 2s ease-in-out;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #5d1049;
+  animation: slideIn 1.5s ease-out;
+}
+
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 3s ease-in-out;
+}
+
+label {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+input[type="file"] {
+  margin-top: 10px;
+}
+
+button {
+  background-color: #5d1049;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #720d5d;
+}
+
+a {
+  color: #5d1049;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #720d5d;
+}
+
+footer.credits h1 {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+</style>
+    <link rel="icon" type="image/png" href="../static/favicon-32x32.ico">
+</head>
+<body>
+    <header>
+        <h1>Average Grade Calculator.</h1>
+    </header>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="file">Choose Grades file:</label>
+        <input type="file" name="file" accept=".pdf" required>
+        <button type="submit">Upload</button>
+    </form>
+    <p>This uses Al Isra's Grading System, <a href="https://www.scholaro.com/db/countries/Jordan/Grading-System#355" target="_blank">resource.</a></p>
+    <footer class="credits">
+        <h1>Made with 💝 by Kareem Alhaj</h1>
+        <h1>Styling by MAH2</h1>
+    </footer>
+</body>
+</html>

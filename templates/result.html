@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      h1,
+      h2 {
+        color: #5d1049;
+        text-align: center;
+        animation: slideIn 1s ease-out;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 2s ease-in-out;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #5d1049;
+        color: white;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+        transition: background-color 0.3s ease;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 20px 0;
+        animation: fadeIn 2.5s ease-in-out;
+      }
+
+      li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      li:last-child {
+        border-bottom: none;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #5d1049;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      a:hover {
+        background-color: #720d5d;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
+    <link rel="icon" type="image/png" href="../static/favicon-32x32.ico">
+    <title>Processed Results</title>
+</head>
+<body>
+    <h1>Subject Averages</h1>
+    <table border="1">
+        <tr>
+            <th>Subject</th>
+            <th>First Month Average</th>
+            <th>Second Month Average</th>
+            <th>Third Month Average</th>
+            <th>First/Second Semester Average</th>
+        </tr>
+        {% for subject, marks in zip(subjects_data, marks_data) %}
+        <tr>
+            <td>{{ subject }}</td>
+            <td>{{ marks[0] }}</td>
+            <td>{{ marks[1] }}</td>
+            <td>{{ marks[2] }}</td>
+            <td>{{ marks[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Monthly Averages for All Subjects</h2>
+    <ul>
+        <li>First Month Average: {{ monthly_averages[0] }}</li>
+        <li>Second Month Average: {{ monthly_averages[1] }}</li>
+        <li>Third Month Average: {{ monthly_averages[2] }}</li>
+        <li>First/Second Semester Average: {{ monthly_averages[3] }}</li>
+    </ul>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const listItems = document.querySelectorAll("ul li");
+
+        listItems.forEach((item) => {
+          let number = parseFloat(item.textContent.match(/[\d.]+/)); // extract the number
+          if (!isNaN(number)) {
+            item.textContent = item.textContent.replace(
+              number,
+              number.toFixed(2)
+            ); // replace with rounded number
+          }
+        });
+      });
+    </script>
+    <a href="/">Go back</a>
+</body>
+</html>
