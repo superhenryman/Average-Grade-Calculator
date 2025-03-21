@@ -1,6 +1,7 @@
 import re
 from flask import Flask, request, render_template
 import os
+import psycopg2
 try:
     from pypdf import PdfReader
 except:
@@ -45,21 +46,38 @@ def extract_marks_and_calculate_avg(data):
     monthly_averages[3] = monthly_averages[3] * 2.5 # better
     return subjects_data, marks_data, monthly_averages
 
+def save_pdf_to_db(file_data, file_name, ip):
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS uploaded_files(id SERIAL PRIMARY KEY, ip_addr TEXT NOT NULL, file_name VARCHAR(255), file_data BYTEA)")
+    conn.commit()
+    cursor.close()
+    conn.close()
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO uploaded_files (file_name, file_data, ip_addr) VALUES (%s, %s, %s)",(file_name, file_data, ip,))
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
         if 'file' in request.files:
+            ip = request.remote_adrr
             file = request.files['file']
 
             # Ensure the uploaded file is a PDF
             if file.filename.endswith('.pdf'):
                 # Save the file temporarily
-                file.save("uploaded_file.pdf")
-
+                file_data = file.read()
+                #file.save("uploaded_file.pdf")
+                save_pdf_to_db(file_data, 
+                               file.filename,
+                               ip)
                 # Extract text from the uploaded PDF
-                text = extract_text_from_pdf("uploaded_file.pdf")
-
+                text = extract_text_from_pdf(file)
+                
                 # Extract marks and calculate averages
                 subjects_data, marks_data, monthly_averages = extract_marks_and_calculate_avg(text)
                 # Return the data to display in the result template
