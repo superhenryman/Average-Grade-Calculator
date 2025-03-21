@@ -1,5 +1,5 @@
 import re
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file, abort
 import os
 import psycopg2
 from io import BytesIO
@@ -63,6 +63,17 @@ def save_pdf_to_db(file_data, file_name, ip):
     conn.close()
 
 
+# Function to retrieve the PDF from the database
+def get_pdf_from_db(file_id):
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+    cursor.execute("SELECT file_name, file_data FROM uploaded_files WHERE id = %s", (file_id,))
+    file = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return file
+
+
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
@@ -91,6 +102,20 @@ def home():
                 return "Please upload a PDF file."
 
     return render_template("index.html")
+
+def force_api_key():
+    if request.headers.get("X-API-KEY") != os.getenv("API_KEY"):
+        abort(403)
+
+# Route to display the PDF
+@app.route("/download_pdf/<int:file_id>")
+def download_pdf(file_id):
+    force_api_key()
+    file = get_pdf_from_db(file_id)
+    if file:
+        file_name, file_data = file
+        return send_file(BytesIO(file_data), as_attachment=True, download_name=file_name, mimetype="application/pdf")
+    return "File not found."
 
 
 if __name__ == "__main__":
